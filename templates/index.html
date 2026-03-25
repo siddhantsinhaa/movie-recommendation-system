@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Recommendation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/script.js"></script>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+        <div class="absolute top-[-100px] left-[-100px] w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-[30%] right-[-100px] w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[-100px] left-[30%] w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="min-h-screen flex items-center justify-center px-4 py-10">
+        <div
+            class="w-full max-w-5xl bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-8 md:p-12">
+
+            <div class="text-center mb-10">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-slate-300 mb-4">
+                    🎥 AI-Powered Recommendation Demo
+                </div>
+
+                <h1
+                    class="text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                    Movie Recommendation System
+                </h1>
+
+                <p class="mt-5 text-slate-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                    Type movies you like, rate them, and get personalized recommendations using
+                    <span class="text-cyan-300 font-semibold">Collaborative Filtering</span>.
+                </p>
+            </div>
+
+            {% if error %}
+            <div
+                class="mb-6 rounded-2xl bg-red-500/15 border border-red-400/30 text-red-200 px-5 py-4 text-center font-medium">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="space-y-5" id="movieForm">
+                {% for i in range(1, 6) %}
+                <div class="grid md:grid-cols-[2fr_1fr] gap-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-slate-300">Movie {{ i }}</label>
+                        <input list="movies-list" name="movie{{ i }}" placeholder="Type movie name..."
+                            class="w-full rounded-2xl bg-slate-900/80 border border-slate-700 px-4 py-3.5 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-slate-300">Your Rating</label>
+                        <select name="rating{{ i }}"
+                            class="w-full rounded-2xl bg-slate-900/80 border border-slate-700 px-4 py-3.5 text-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition">
+                            <option value="">Select Rating</option>
+                            <option value="1">1 ⭐</option>
+                            <option value="2">2 ⭐</option>
+                            <option value="3">3 ⭐</option>
+                            <option value="4">4 ⭐</option>
+                            <option value="5">5 ⭐</option>
+                        </select>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Search Suggestions -->
+                <datalist id="movies-list">
+                    {% for movie in movies %}
+                    <option value="{{ movie }}"></option>
+                    {% endfor %}
+                </datalist>
+
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 py-4 text-lg font-bold shadow-lg hover:scale-[1.01] active:scale-[0.99] transition duration-300">
+                        🚀 Get Top Recommendations
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-10 grid md:grid-cols-3 gap-4 text-center">
+                <div class="rounded-2xl bg-white/5 border border-white/10 p-4">
+                    <p class="text-2xl mb-1">⌨️</p>
+                    <h3 class="font-bold text-lg">Type Movie Names</h3>
+                    <p class="text-sm text-slate-400 mt-1">Quickly search and choose your favorite movies</p>
+                </div>
+                <div class="rounded-2xl bg-white/5 border border-white/10 p-4">
+                    <p class="text-2xl mb-1">🤝</p>
+                    <h3 class="font-bold text-lg">Collaborative Filtering</h3>
+                    <p class="text-sm text-slate-400 mt-1">Uses similarity between movies based on ratings</p>
+                </div>
+                <div class="rounded-2xl bg-white/5 border border-white/10 p-4">
+                    <p class="text-2xl mb-1">⭐</p>
+                    <h3 class="font-bold text-lg">Predicted Ratings</h3>
+                    <p class="text-sm text-slate-400 mt-1">Get movies the system thinks you’ll enjoy</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
