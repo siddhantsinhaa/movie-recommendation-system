@@ -19,14 +19,31 @@ ratings = pd.read_csv(ratings_path)
 movies = movies[['movieId', 'title', 'genres']]
 ratings = ratings[['userId', 'movieId', 'rating']]
 
+# -----------------------------------
+# MEMORY OPTIMIZATION STARTS HERE
+# Keep only popular movies (at least 50 ratings)
+# -----------------------------------
+movie_counts = ratings['movieId'].value_counts()
+popular_movie_ids = movie_counts[movie_counts >= 50].index
+
+movies = movies[movies['movieId'].isin(popular_movie_ids)]
+ratings = ratings[ratings['movieId'].isin(popular_movie_ids)]
+
+# Merge datasets
 data = pd.merge(ratings, movies, on="movieId")
 
+# Create movie-user matrix
 movie_user_matrix = data.pivot_table(
     index='title',
     columns='userId',
     values='rating'
 ).fillna(0)
 
+# Extra memory optimization: keep only top 1000 movies max
+if len(movie_user_matrix) > 1000:
+    movie_user_matrix = movie_user_matrix.iloc[:1000]
+
+# Compute similarity
 movie_similarity = cosine_similarity(movie_user_matrix)
 movie_similarity_df = pd.DataFrame(
     movie_similarity,
@@ -35,7 +52,10 @@ movie_similarity_df = pd.DataFrame(
 )
 
 movie_titles = sorted(movie_user_matrix.index.tolist())
-movie_genre_map = dict(zip(movies['title'], movies['genres']))
+
+# Keep only available movie genres
+filtered_movies = movies[movies['title'].isin(movie_titles)]
+movie_genre_map = dict(zip(filtered_movies['title'], filtered_movies['genres']))
 
 
 # -----------------------------------
